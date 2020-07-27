@@ -14,7 +14,11 @@ class Achievement {
   }
 
   printValues() {
-    console.log(`${this.name} achievement has been completed by ${this.percent}% of people.`);
+    if (this.percent < 1) {
+      console.log(`No one has completed this achievement: ${this.name}.`);
+    } else {
+      console.log(`${this.name} achievement has been completed by ${this.percent}% of people.`);
+    }
   }
 }
 
@@ -26,13 +30,20 @@ async function fetchData(url){
 }
 
 function printData(jsonData) {
+  let achievementsArr = [];
   let jsonObject = jsonData["achievementpercentages"];
   let allAchievements = jsonObject['achievements'];
 
   for (let achievement of allAchievements){
     let name = achievement['name'];
-    console.log(name);
+    let percent = achievement['percent'];
+    let newAchievement = new Achievement(name, percent);
+    newAchievement.printValues();
+    achievementsArr.push(newAchievement)
   }
+
+  console.log(achievementsArr.length);
+  return achievementsArr;
 }
 
 fetchData(url).catch(function() {
